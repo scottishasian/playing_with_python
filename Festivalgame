@@ -1,0 +1,848 @@
+#Need to write fight into a full game system and work out how to move on to another scene when fight
+#is complete.
+
+from sys import exit
+from random import randint
+import random
+
+class Scene(object):
+
+	def enter(self):
+		print "This is an empty scene. Subclass it and implement enter()."
+		exit(1)
+		
+class Engine(object):
+
+
+	def __init__(self, scene_map):
+		self.scene_map = scene_map
+		
+	def play(self):
+		current_scene = self.scene_map.opening_scene()
+		
+		while True:
+			print "\n", "-" * 30
+			next_scene_name = current_scene.enter()
+			current_scene = self.scene_map.next_scene(next_scene_name)
+			
+class Death(Scene):
+	quips = [
+		"Well, unfortunately you died. That is a shame.",
+		"Poor choices have lead to your current predicament.",
+		"Well, clearly you did something wrong."
+		]
+		
+	def enter(self):
+		print Death.quips[randint(0, len(self.quips)-1)]
+		print "You now have two choices, 1. Try again, or 2. Give up."
+		
+		try:
+			choice = int(raw_input("Type 1 to try again, or 2 to leave the game."))
+			
+		except ValueError:
+			print "You didn't select 1 or 2."
+			return 'death'
+		
+		if choice == 1:
+			print "Good luck."
+			return 'enter'
+			
+		elif choice == 2:
+			print "Goodbye."
+			exit(1)
+			
+		else:
+			print "You typed nothing."
+			return 'death'	
+			
+class Win(Scene):
+
+	def enter(self):
+		print "Well done, you have successfully survived the Fringe Festival."
+		print "Do you line yourself up for another year working the Fringe, or go pursue "
+		print "something new?"
+		
+		choice = int(raw_input("Type 1 to try again, or 2 to leave the game."))
+		
+		if choice == 1:
+			print "Good luck."
+			return 'enter'
+			
+		elif choice == 2:
+			print "Goodbye."
+			exit(1)
+			
+		else:
+			print "You typed nothing."
+			return 'death'	
+
+		
+class test(Scene):
+
+# Could put this all in a dictionary and make the script shorter.
+	def enter(self):
+		room = raw_input("Choose a room: ")
+		if room == "corridor":
+			return 'corridor'
+		elif room == "boss1":
+			return 'boss1room'
+		elif room == "boss2":
+			return 'boss2room'
+		elif room == "win":
+			return 'win'
+		elif room == 'right':
+			return 'right'
+		elif room == 'right2':
+			return 'right2'	
+		elif room == 'right3':
+			return 'right3'	
+		elif room == 'left':
+			return 'left'
+		elif room == 'left2':
+			return 'left2'
+		elif room == 'boss3':
+			return 'boss3room'
+		else:
+			return 'test' 		
+		
+class entrance(Scene):
+	
+	print "\n", "=" * 60
+	print "It is the year 2017, and August.... It is the Fringe Festival, when horriffic "
+	print "monstrosities descend on Edinburgh."
+	print "You wake up in one of the event rooms of your bar... you need to escape."
+	print "On the floor next to you is a crowbar, that seems like a handy thing to take." 
+	print "You pick it up."
+	print "=" * 60
+	
+	def enter(self):
+		print "With the crowbar in hand, you explore the room."
+		print "There are flyers everywhere, and it almost seems there is no way out."
+		print "Then suddenly, despite the poor light, you make out an exit on the far side"
+		print "of the room. Unfortunately it is boarded up..."
+		
+		attacks = {"Smash" : randint(5, 10),
+					"Kick" : randint(1, 4),
+					"super" : randint(20, 80),
+					"test" : 'test'}
+					
+					
+		door_health = 12
+		door1 = True
+		
+		while door1:
+			print "\n", "-" * 30
+			
+			action = raw_input("Type 'smash' to hit with the crowbar or 'kick' to kick. > ").lower()
+		
+			if action in  ("1", "smash"):
+				action = attacks["Smash"]
+				door_health =  door_health - action
+				print ("You swing the crowbar and smash it on the door, it deals", action, "damage.")
+				print "\nThe door has %d health left" % door_health
+				if door_health <= 0:
+					print "\n", "-" * 30
+					print "With one final hit, the boards fall apart and reveal a flimsy door."
+					print "Amongst the wreckage, you find a cocktail shaker and boston glass."
+					print "You realise that they might come in handy so you pick them up."
+					print "You hear a faint 'ding' and feel like you have learnt something."
+					print "Out of nowhere, you hear; "
+					print "\n", "-" * 30
+					print "YOU HAVE LEARNT THROW COCKTAIL SHAKER."
+					print "-" * 30
+					return 'corridor'
+				
+			elif action in ("2", "kick"):
+				action = attacks["Kick"]
+				door_health = door_health - action
+				print ("You kick the door. It deals", action, "damage.")
+				print "\nThe door has %d health left" % door_health
+				if door_health <= 0:
+					print "\n", "-" * 30
+					print "With one final hit, the boards fall apart and reveal a flimsy door."
+					print "Amongst the wreckage, you find a cocktail shaker and boston glass."
+					print "You realise that they might come in handy so you pick them up."
+					print "You hear a faint 'ding' and feel like you have learnt something."
+					print "Out of nowhere, you hear; "
+					print "\n", "-" * 30
+					print "YOU HAVE LEARNT THROW COCKTAIL SHAKER."
+					print "-" * 30
+					return 'corridor'
+					
+			elif action in ("3", "super"):
+				action = attacks["super"]
+				door_health = door_health - action
+				print ("You laser the door. It deals", action, "damage.")
+				print "\nThe door has %d health left" % door_health
+				if door_health <= 0:
+					print "\n", "-" * 30
+					print "With one final hit, the boards fall apart and reveal a flimsy door."
+					print "Amongst the wreckage, you find a cocktail shaker and boston glass."
+					print "You realise that they might come in handy so you pick them up."
+					print "You hear a faint 'ding' and feel like you have learnt something."
+					print "Out of nowhere, you hear; "
+					print "\n", "-" * 30
+					print "YOU HAVE LEARNT THROW COCKTAIL SHAKER."
+					print "-" * 30
+					return 'corridor'
+			
+			elif action == "test":
+				return 'test'
+
+			else:
+				print "You did not do anything."
+				print "Try and attack again."
+		
+
+class corridor(Scene):
+	
+	def enter(self):
+		print "=" * 40
+		print "You break through the door into the next area."
+		print "It is crudely papered with posters advertising various shows in the Fringe."
+		print "Amongst them you manage to make out 3 doors. One to your left, right and"
+		print "ahead of you. The door ahead has a keypad on it."
+		print "\nWhich door do you choose?"
+		print "\n", "-" * 30
+		choice = raw_input("Type 'left' to go left, 'right' for right and 'forward' to try the keypad.> ").lower()
+		
+					
+		#Key pad still appears when wanting to go left or right.
+		#Need to work out how to either break the loop when left/right entered or contain
+		#it in the "forward" choice.
+		
+		#By making the keypad into a class of its own, the user can make other choices,
+		#and not having to go through the keypad.
+		
+		if "forward" in choice:
+			return 'forward'			
+					
+		elif "left" in choice:
+			return 'left'
+			
+		elif "right" in choice:
+			return 'right'
+			
+		else:
+			print "No choices equals death."
+			return 'death'
+			
+class forward(Scene):
+
+	def enter(self):
+		print "The keypad's buttons light up and glow green as you approach it."
+		print "A note above the keypad has \"four goes left\" hastily scrawled on it."
+		print "Time to try your luck! You need to enter 3 numbers."
+		code = "%d%d%d" % (randint(1,9), randint(1,9), randint(1,9))
+		cheat = "521"
+		guess = raw_input("[Keypad]> ")
+		guesses = 0
+	
+		while guess not in [cheat, code] and guesses < 3:
+				print "Bzzzzzzzzzeddd!"
+				guesses += 1
+				guess = raw_input("[Keypad]> ")
+				
+		if guess in [cheat, code]:
+			print "The key pad plays a tune from a band you probably haven't even heard of."
+			print "With a hiss, the door releases and opens."
+			return 'boss1room'
+		else:
+			print "That didn't work. Looks like it is time to go left or right."
+			choice = raw_input("Type 'left' to go left, 'right' for right.> ")
+			if choice == "left":
+				return 'left'
+			elif choice == "right":
+				return 'right'
+			else:
+				print "You did nothing. Game over."
+				return 'death'
+			
+class rightroom():
+
+	def enter(self):
+		print "You carefully open the door on the right, it takes a bit of effort, but "
+		print "eventually you manage to pull it open."
+		print "\nThis room is different from the others, it is bright, and clean."
+		print "You see vents and extractor fans all over the ceiling and walls."
+		print "Suddenly you hear a \"SLAM!\" and a \"HISS\", the door shuts behind you and"
+		print "seals. The extractor fans begin to turn on and the vents shut. A pedastal "
+		print "rises from the centre of the room, on it a computer activates and requests "
+		print "a password."
+		
+		password = "festival"
+		guesses = 0
+		guess =  raw_input("\nPlease type in the password and press enter. > ")
+		
+		
+		while guess != "festival" and guesses < 8:
+				print "\nBzzzzzzzzzeddd!"
+				#print "Here is a clue:"
+				
+				password = "festival"
+				indexes = list(range(len(password)))
+				random.shuffle(indexes)
+				
+				for i in indexes[:1]:
+					#Currently prints the letters more than once.
+					#Need to somehow limit it so the user can work out the password.
+					print ("Here is a clue:  %s" % (password[i]))
+					guesses += 1
+				guess = raw_input("[Keypad]> ")
+				
+		if guess == "festival":
+			print "\nYou enter the password and hit enter."
+			print "The login screen vanishes and for a short while nothing happens."
+			print "You start to feel the air thinning in the room and begin to panic."
+			print "All of a sudden lines of binary code run across the screen, eventually "
+			print "producing a command screen asking if you want reactivate the air."
+			choice = raw_input("\nReactivate air system? Y/N: > ").lower()
+			
+			if choice == "y":
+				print "\nWith a slow click the vents re-open and you feel cold air rush into "
+				print "the room."
+				print "A faint hiss begins and you see a section of the wall move to reveal "
+				print "a door."
+				print "You rush to the door and onto the next room."
+				return 'right2'
+			else:
+				print "\nYou choose not to activate the air system (who knows why...), and "
+				print "you begin to choke, eventually passing out."
+				print "It all goes black."
+				return 'death'	
+		else:
+			print "You fail to enter the correct password and the computer switches off."
+			print "The air grows thinner and you pass out."
+			return 'death'
+			
+		
+		#Here the user gets 10 chances to type the pass word in before the air runs out.
+		#The plan is to either have a randomly assigned word from a dictionary or
+		#have a set word and everytime they user gets the answer wrong they get a clue
+		#in the form of a random letter from the word.	
+		
+class rightroom2(Scene):
+		
+	def enter(self):
+		print "You dive through the door into the room, gasping for air."
+		print "As you catch your breath you begin to examine your new setting."
+		print "On the wall to the left of you there appears to be a map."
+		print "To the right, a hatch with a terminal crudley duct taped to it."
+		print "And ahead of you a broken bar with a large hole behind it."
+		print "What will you do now?"
+		choice = raw_input("\nType 'map' to look at the map, 'hole' to go through the hole, or 'examine' to look at the terminal. > ").lower()
+		
+		
+		if choice == "map":
+			print "	  ----------| Finish |----------			"
+			print "	  ----------| Battle |----------			"
+			print "	  |  Cage  ||Unknown ||ID Check|---------- 	"
+			print "	  |Restroom||Unknown ||Map-room||Unknown |  "
+			print "	  |Drone-D5||Corridor||IT-room |----------	"
+			print "	  ----------|Entrance|----------			"
+			print "\n\t------YOU ARE CURRENTLY IN THE MAP ROOM------"
+			print "\nWhat till you do now?"
+			choice = raw_input("Type 'hole' to go through the hole, or 'examine' to examine the terminal. >").lower()
+			
+			if choice == "hole":
+				print "Go to hole"
+				return 'right3'
+			
+			elif choice == "examine":
+				return 'terminal'
+				
+			else:
+				print "You try to make a choice, but it is hard. So you just give up."
+				return 'death'
+				
+		elif choice == "hole":
+			print "Go to hole"
+			return 'right3'
+				
+		elif choice == "examine":
+				return 'terminal'
+				
+		else:
+			print "You try to make a choice, but suddenly you get a wave of nausea"
+			print "and find your self in mid dive."
+			return 'right2'
+
+class terminal(Scene):
+
+	def enter(self):
+		print "The terminal switches on as you approach it."
+		print "On the screen 'It is time for a game' appears."
+		return 'death'
+	
+	#Overides entrance scene and plays at the start. Additionally can not return 'win'.
+	#Maybe save this as a separate script and import it to this script.
+		
+	#board = []
+	
+	#for x in range(5):
+	#	board.append(["0"] * 5)
+		
+	#def print_board(board):
+	#	for row in board:
+	#		print " ".join(row)
+			
+	#print "Welcome to BATTLESHIP!"
+	#print_board(board)
+	
+	#def random_row(board):
+	#	return randint(0, len(board) - 1)
+		
+	#def random_col(board):
+	#	return randint(0, len(board[0]) - 1)
+		
+	#ship_row = random_row(board)
+	#ship_col = random_col(board)
+	
+	#for turn in range(4):
+	
+	#	guess_row = int(raw_input("Guess Row: "))
+	#	guess_col = int(raw_input("Guess Column: "))
+		
+	#	if guess_row == ship_row and guess_col == ship_col:
+	#		print "Congratulations! You sunk my Battleship!."
+	#		print "The hatch opens with a loud creak, and you see it, the outside world!"
+	#		print "Freedom!"
+	#		break
+	#	else:
+	#		if (guess_row < 0 or guess_row > 4) or (guess_col < 0 or guess_col > 4):
+	#			print "That is not a valid move!"
+	#		elif (board[guess_row][guess_col] == "X"):
+	#			print "You have already guessed that one."
+	#		else:
+	#			print "You missed fool!"
+	#			
+	#		board[guess_row][guess_col] = "X"
+	#		
+	#		if turn == 3:
+	#			print "Game Over"
+	#			print ship_row
+	#			print ship_col
+	#		print "Turn", turn + 1
+	#	print print_board(board)
+				
+		
+class rightroom3(Scene):
+
+	def enter(self):
+		print "Test"
+		return 'win'
+			
+class leftroom(Scene):
+
+	robotnoise = [
+		"Beep boop",
+		"Bzzzzzzdddddd",
+		"WARNING WARNING",
+		"WHAT IS MY PURPOSE?!",
+		"Beep.... Beep..... Beeeeeeeeeep",
+		"KISS MY SHINY METAL ASS."
+		]
+		
+	robotattack = [
+		"The robot flails at you!"
+		"The robot uses punch!"
+		"The robot uses screech!"
+		"The robot uses \"Existential crisis\"!"
+		]
+			
+	def enter(self):
+		print "You push open the door on the left, crowbar in hand for whatever is in here."
+		print "As you enter, you see a table with a button on it."
+		print "Do you press it?"
+		choice = raw_input("Type 'Y' to press the button and 'N' to avoid it.").lower()
+		
+		if choice == "y":
+			print "\nAlarms start to go off and a hatch opens from the side of the room."
+			print "A poorly made robot walks out and stares at you."
+			print "It loudly screams; ", leftroom.robotnoise[randint(0,len(self.robotnoise)-1)]
+			return 'robotfight'
+			
+		elif choice == "n":	
+			print "\nYou decide it probably is a best not to press a random button."
+			print "You move around the table and proceed to the door at the back of"
+			print "the room."
+			return 'left2'
+		
+		else:
+			print "\nYou take too long to decide and an alarm sounds and a hatch opens."
+			print "A poorly made robot walks out and stares at you."
+			print "It loudly screams; ", leftroom.robotnoise[randint(0,len(self.robotnoise)-1)]
+			return 'robotfight'
+			
+class robotfight(Scene):
+	
+	robotnoise = [
+		"Beep boop",
+		"Bzzzzzzdddddd",
+		"WARNING WARNING",
+		"WHAT IS MY PURPOSE?!",
+		"Beep.... Beep..... Beeeeeeeeeep",
+		"KISS MY SHINY METAL ASS."
+		]
+		
+	robotattack = [
+		"The robot flails at you!",
+		"The robot uses punch!",
+		"The robot uses screech!",
+		"The robot uses \"Existential crisis\"!"
+		]
+			
+	
+	def enter(self):
+		print "The robot shuffles towards you to attack."
+		print "As it moves, you hear creaks and growns and sparks coming off it."
+		#print "It shouts; ", leftroom.robotnoise[randint(0,len(self.robotnoise)-1)]
+		print "It shouts; ", robotfight.robotnoise[randint(0,len(self.robotnoise)-1)]
+		
+		#Need to work out how to call the quotes from 'leftroom' rather than repeating it here.
+		
+		health = 100
+		robot_health = 100
+		robot1 = True
+		turn = 0
+		
+		attacks = {"Smash" : randint(5, 10),
+				"Kick" : randint(1, 4),
+				"super" : randint(20, 60),
+				"Throw" : randint(10, 100)
+				}
+				
+		while health > 0 and robot1 and turn < 10:
+			print "\n", "-" * 30
+			robot_attack = randint(1, 25)
+			
+			action = raw_input("Attack with 'smash', 'kick' or 'throw'. > ").lower()
+			
+			if action in  ("1", "smash"):
+				action = attacks["Smash"]
+				robot_health =  robot_health - action
+				print "\nYou swing the crowbar at the robot, it deals", action, "damage."
+				print "The robot has %d health left" % robot_health
+				turn += 1
+				if robot_health <= 0:
+					robot1 = False
+					print "\nWith a final swing, you manage to knock its head right off."
+					print "Its body wildly swings its arms around, before collapsing."
+					print "You proceed to the door at the back of the room."
+					return 'left2'
+					
+			elif action in  ("2", "kick"):
+				action = attacks["Kick"]
+				robot_health =  robot_health - action
+				print "\nYou kick the robot, it deals", action, "damage."
+				print "The robot has %d health left" % robot_health
+				turn += 1
+				if robot_health <= 0:
+					robot1 = False
+					print "\nWith a final kick, you hear a creak and the robot falls apart."
+					print "You decide it may be best to get out of here an run to the door."
+					return 'left2'	
+					
+			elif action in  ("3", "super"):
+				action = attacks["super"]
+				robot_health =  robot_health - action
+				print "\nYou laser the robot, it deals", action, "damage."
+				print "The robot has %d health left" % robot_health
+				turn += 1
+				if robot_health <= 0:
+					robot1 = False
+					print "\nWin text."
+					return 'left2'	
+					
+			elif action in  ("4", "throw"):
+				action = attacks["Throw"]
+				robot_health =  robot_health - action
+				print "\nYou throw the cocktail shaker at the robot, it deals", action, "damage."
+				print "It hits them and bounces back to your hand."
+				print "The robot has %d health left" % robot_health
+				turn += 1
+				if robot_health <= 0:
+					robot1 = False
+					print "\nYou manage to hit a panel off its chest and a battery falls out."
+					print "The robot shudders, the light goes out of its eyes."
+					print "With a sigh of relief, you take a quick break."
+					print "After catching your breath, you move to the door out."
+					return 'left2'
+							
+			else:
+				print "You freeze up."
+				turn += 1
+				
+			if robot1:
+				health = health - robot_attack
+				print "\nIt screams", "\"",robotfight.robotnoise[randint(0,len(self.robotnoise)-1)], "\""
+				print robotfight.robotattack[randint(0,len(self.robotattack)-1)]
+				print "It causes %d damage and you have %d health left." % (robot_attack, health)
+				if health <= 0:
+					print "\nThe attacks keep coming with all the strength of machine"
+					print "over man."
+					print "With one final attack the robot crushes your face..."
+					return 'death'
+					break
+					
+				if robot_attack > 20:
+					print "It is super effective!"
+					
+			if turn == 10:
+				print "\nThe robot shudders and fire starts to emerge from the cracks in its"
+				print "shell."
+				print "In seconds the whole robot bursts into flames and then.. BOOM."
+				return 'death'
+		
+		
+		#In this room the user fights a security drone.
+		#In addiction to the 3 attacks, I might try add a heal function.
+		#Limiting the turns to say 20. If the drone or user are not killed by then,
+		#the drone will power down allowing the user to proceed.
+		#alternatively it could be a count down where both the user and drone are killed.
+		
+class leftroom2(Scene):
+	def enter(self):
+		print "This is the 2nd left room."
+		return 'win'
+			
+class boss1r(Scene):
+
+	quotes = [
+		"This isn't how I make this drink at home.",
+		"I want to speak to your manager.",
+		"What kind of place doesn't serve tennents?!",
+		"Do you know who I am?!",
+		"I will have you know, I used to work in bars!",
+		"Do you have any vegan, gluten and cruelty free alcohol?",
+		"Can you give me a free drink because it is my birthday?",
+		"The drinks are better in Wetherspoons.",
+		"Em... I work here, can I get a drink for free?",
+		"Less ice, I don't want to dilute the alcohol."
+	]
+	
+	bossattack = [
+		"The performer throws some flyers at you!",
+		"The performer leaps around and attacks you in a theatrical way.",
+		"They do some interpretive dance.",
+		"They tell you about how cultural and spiritual their gap year was.",
+		"They throw some of their odd costume at you."
+	]
+
+	def enter(self):
+		print "\n", "-" * 30
+		print "You step through the doorway into a blinding light."
+		print "You hear loud battle encounter music, much like in the Pokemon games."
+		print "Wild Performer Appears!"
+		print "They try to convince you to come to their show!"
+		
+		health = 100
+		boss1_health = 100
+		boss1 = True
+		
+		attacks = {"Smash" : randint(5, 10),
+				"Kick" : randint(1, 4),
+				"super" : randint(20, 60),
+				"Throw" : randint(10, 100),
+				"Heal" : randint(6, 15)
+				}
+		
+		while health > 0 and boss1:
+			print "\n", "-" * 30
+			boss1_attack = randint(1, 60)
+			
+			action = raw_input("Attack with 'smash', 'kick' or 'throw'. > ").lower()
+		
+			if action in  ("1", "smash"):
+				action = attacks["Smash"]
+				boss1_health =  boss1_health - action
+				print "\nYou swing the crowbar at the performer, it deals", action, "damage."
+				print "The Perfromer has %d health left" % boss1_health
+				if boss1_health <= 0:
+					boss1 = False
+					print "The performer faints."
+					print "With the performer out of the way, you are able to reach the"
+					print "door behind them. "
+					return 'boss2room'
+					
+			elif action in  ("2", "kick"):
+				action = attacks["Kick"]
+				boss1_health =  boss1_health - action
+				print "\nYou kick the performer, it deals", action, "damage."
+				print "The Perfromer has %d health left" % boss1_health
+				if boss1_health <= 0:
+					boss1 = False
+					print "The performer faints."
+					print "With the performer out of the way, you are able to reach the"
+					print "door behind them. "
+					return 'boss2room'	
+					
+			elif action in  ("3", "super"):
+				action = attacks["super"]
+				boss1_health =  boss1_health - action
+				print "\nYou laser the performer, it deals", action, "damage."
+				print "The Perfromer has %d health left" % boss1_health
+				if boss1_health <= 0:
+					boss1 = False
+					print "Win text."
+					return 'boss2room'	
+					
+			elif action in  ("4", "throw"):
+				action = attacks["Throw"]
+				boss1_health =  boss1_health - action
+				print "\nYou throw the cocktail shaker at the performer, it deals", action, "damage."
+				print "It hits them and bounces back to your hand."
+				print "The Perfromer has %d health left" % boss1_health
+				if boss1_health <= 0:
+					boss1 = False
+					print "The performer succumbs to their wounds and recieves a 1 star"
+					print "review by the Guardian."
+					print "Behind them a door opens up to the next room."
+					return 'boss2room'
+					
+			elif action in  ("5", "heal"):
+				action = attacks["Heal"]
+				health =  health + action
+				print "\nYou heal yourself for", action, "points."
+				print "You have %d health left." % health
+				print "The Perfromer has %d health left" % boss1_health 
+							
+			else:
+				print "You freeze up."
+				
+			if boss1:
+				health = health - boss1_attack
+				print "\n", boss1r.bossattack[randint(0,len(self.bossattack)-1)]
+				print "They tell you;"
+				print boss1r.quotes[randint(0,len(self.quotes)-1)]
+				print "It causes %d damage and you have %d health left." % (boss1_attack, health)
+				if health <= 0:
+					print "You succumb to their sales pitch and attend their show, never"
+					print "to be seen again..."
+					return 'death'
+					break
+					
+	# Need to set the fights to print out when someone has reached 0 health, not a negative.
+					
+class boss2r(Scene):
+	
+	def enter(self):
+		print "As you enter the room, you see nothing, literally nothing but 4 walls and "
+		print "shut door behind you."
+		print "Suddenly the whole wall ahead of you flickers and a face appears."
+		print "You rush in to attack the wall but it does nothing."
+		print "\n"
+		print "The face on the wall speaks, "
+		print "\n"
+		print "To proceed past me and escape the fringe you must answer my questions."
+		print "Do you accept?"
+		choice = raw_input("Do you answer the questions? Y/N: > ").lower()
+		
+		if choice == "n":
+			print "The face fades and the room goes black."
+			print "You hear scuttling around you, things brushing against you."
+			print "Then nothing..."
+			return 'death'
+		
+		elif choice == "y":
+			print "A wise choice. Now time for a....."
+			
+		else:
+			print "You made no choice...."
+			print "Goodbye."
+			return 'death'
+	
+		questions = {
+			"What is the capital of Paris?": ['a. Paris is the capital of France you fool!', 'b. What is a Paris', 'c. I don\'t know.', 'a'],
+			"What colour is red?": ['a. Blue', 'b. Red', 'c. An apple', 'b'],
+			"What month does the Fringe inhabit?": ['a. January', 'b. Flebsuary', 'c. August', 'c'],
+			"What is pie?": ['a. A tasty treat', 'b. Something to put macaroni in.', 'c. 3.14', 'b']
+		}
+		#Still does not quite randomise the questions, consistently produces 2, 1 then 3.
+		score = 0
+		guesses = 0
+	
+		while score != 3:
+			print "\nQUIZQUIZQUIZQUIZQUIZQUIZQUIZ"
+	
+			for question in questions:
+				print ("\nQuestion:")
+				print question
+				for options in questions[question][:-1]:
+					print (options)
+				user_choice = raw_input("Please choose now: ") 
+				if user_choice == questions[question][-1]:
+					print ("Correct!")
+					score += 1
+				else:
+					print ("Wrong!")
+					
+			#Questions do not stop after user has scored 3 points. Asks all questions.
+			
+			if score == 3:
+				print "Congratulations, you have passed the test.. You may now proceed."
+				print "But before I go here is a gift."
+				print "A small green orb with a red cross on it rolls towards you."
+				print "You now know HEAL."
+				print "\nThe room goes black, and you hear a rumble."
+				print "A blinding light begins to pour in ahead of you, and you realise"
+				print "that the wall is raising."
+				print "When you regain your sight you see a horrifying sight ahead."
+				return 'boss3room'
+			else:
+				return 'death'
+				
+class boss3r(Scene):
+
+	def enter(self):
+		print "This is the final boss."
+		
+		health = 100
+		boss3_health = 300
+		boss3 = True
+		
+		attacks = {"Smash" : randint(5, 10),
+				"Kick" : randint(1, 4),
+				"super" : randint(20, 60),
+				"Throw" : randint(10, 100),
+				"Heal" : randint(10, 30)
+				}
+				
+				
+		return 'win'
+				
+class Map(object):
+
+	scenes = {
+		'win' : Win(),
+		#"Last": lastroom(),
+		'enter' : entrance(), #fight
+		'corridor' : corridor(), #3 choices of door.
+		'left' : leftroom(),   #Security room.
+		'right' : rightroom(), #Oxygen room.
+		'boss1room' : boss1r(), #fight
+		'boss2room' : boss2r(), #quiz
+		'boss3room' : boss3r(),
+		'left2' : leftroom2(),
+		#'left3' : leftroom3(),
+		'right2': rightroom2(),
+		'right3' : rightroom3(),
+		'death'	: Death(),
+		'forward': forward(), #Keypad choice in the corridor.
+		'robotfight' : robotfight(),
+		'terminal' : terminal(),
+		'test' : test()
+	}
+	
+	def __init__(self, start_scene):
+		self.start_scene = start_scene
+	
+	def next_scene(self, scene_name):
+		return Map.scenes.get(scene_name)
+	
+	def opening_scene(self):
+		return self.next_scene(self.start_scene)
+	
+a_map = Map('enter')
+a_game = Engine(a_map)
+a_game.play()
