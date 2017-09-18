@@ -1,0 +1,46 @@
+#Higher or lower
+
+from random import randint
+import random
+
+def Dice():
+	code = "%r" % (randint(1, 6))
+	next_num = "%r" % (randint(1, 6))
+	score = 0
+	roll = 0
+	print "\nWill the next number be higher or lower?"
+	
+	while roll < 6:
+		code = "%r" % (randint(1, 6))
+		next_num = "%r" % (randint(1, 6))		
+		roll += 1
+		print "\nTurn", roll, "|| This is the current number: %r" % code
+		print "-" * 40
+		guess = raw_input("Higher or Lower? > ")
+		
+		
+		if guess == "lower" and next_num < code:
+			print "\nYour number: %r" % next_num
+			print "\nWell done."
+			score += 1
+		elif guess == "higher" and next_num > code:
+			print "\nYour number: %r" % next_num
+			print "\nWell done."
+			score += 1
+		else:
+			print "\nYour number: %r" % next_num
+			print "\nNo points for you."
+			
+			
+		print "Your score is: ", score, "\n"
+		
+		if roll < 6:
+			print "Next round.\n"
+		
+Dice()
+
+		
+		
+# maybe write an if statement to account for if use will think the numbers will be the same.
+# need to re-write in ruby.
+	
